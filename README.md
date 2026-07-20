@@ -207,3 +207,4 @@ python3 tools/viewer/ai_debug_validate.py release
 - [JTAG Bridge 使用说明](doc/YiFPGA_JTAG_Bridge_使用说明.md)
 - [AI Debug 使用说明](doc/YiFPGA_AI_Debug_使用说明.md)
 - [v1.0.0 发布 Checklist](doc/V1_RELEASE_CHECKLIST.md)
+- [剩余工作与执行顺序](doc/REMAINING_WORK.md)
