@@ -1,8 +1,9 @@
-# Program the M36 JTAG+ILA image; an exact cable target filter is mandatory.
+# Program the M36 JTAG+ILA image using an exact cable target or the sole
+# enumerated target when the selector is "auto".
 set script_dir [file normalize [file dirname [info script]]]
 set repo_root [file normalize [file join $script_dir .. ..]]
 if {$argc < 1 || $argc > 2} {
-    error "Pass exact target and optional 'perf' or 'jtag_only' mode"
+    error "Pass exact target (or 'auto') and optional 'perf' or 'jtag_only' mode"
 }
 set mode [expr {$argc == 2 ? [lindex $argv 1] : "normal"}]
 if {$mode eq "perf"} {
@@ -23,18 +24,27 @@ foreach artifact [list $bit_file $ltx_file] {
 set target_filter [lindex $argv 0]
 open_hw_manager
 connect_hw_server
-set targets {}
-foreach candidate [get_hw_targets -quiet] {
-    set candidate_name [get_property NAME $candidate]
-    if {$candidate_name eq $target_filter ||
-        [string match "*/$target_filter" $candidate_name]} {
-        lappend targets $candidate
+if {$target_filter eq "auto"} {
+    set targets [get_hw_targets -quiet]
+} else {
+    set targets {}
+    foreach candidate [get_hw_targets -quiet] {
+        set candidate_name [get_property NAME $candidate]
+        if {$candidate_name eq $target_filter ||
+            [string match "*/$target_filter" $candidate_name]} {
+            lappend targets $candidate
+        }
     }
 }
 if {[llength $targets] != 1} {
+    if {$target_filter eq "auto"} {
+        error "Automatic programming requires exactly one JTAG target, found [llength $targets]: $targets"
+    }
     error "Expected exactly one target matching '$target_filter', found [llength $targets]: $targets"
 }
-open_hw_target [lindex $targets 0]
+set selected_target [lindex $targets 0]
+puts "PROGRAM_TARGET: [get_property NAME $selected_target]"
+open_hw_target $selected_target
 set devices [get_hw_devices]
 if {[llength $devices] != 1} { error "Expected one FPGA, found [llength $devices]: $devices" }
 set device [lindex $devices 0]

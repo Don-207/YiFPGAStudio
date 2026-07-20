@@ -7,6 +7,8 @@ YiFPGA Studio 的重要变更记录在此文件中。
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-20
+
 ### Added
 
 - 为 pull request 和 `main` 分支添加无硬件、无网络的自动发布检查。
@@ -21,6 +23,8 @@ YiFPGA Studio 的重要变更记录在此文件中。
 
 - 1.0.0 系列仅承诺 Xilinx `xcku5p-ffvb676-2-i` 参考实现。
 - Qt Viewer、其他 FPGA 厂商以及 PCIe/Ethernet/USB/SPI Transport 尚未纳入本版本。
-- 正式 `v1.0.0` 发布仍需完成可复现 Vivado 构建与实板发布门禁。
+- 参考实现已在 ATK-KU5 上使用 Vivado 2024.2 Build 5239630 完成可移植工程重建、
+  五配置综合、实现、UART/JTAG、Web Viewer、AI Debug 和 30 分钟性能长稳验收。
 
 [Unreleased]: https://github.com/Don-207/YiFPGAStudio/commits/main
+[1.0.0]: https://github.com/Don-207/YiFPGAStudio/releases/tag/v1.0.0

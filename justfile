@@ -120,10 +120,18 @@ m35-ftdi-bridge tck="6000000" block="1024":
     {{python}} tools/jtag/yifpga_jtag_bridge.py --backend ftdi --tck-hz {{tck}} --block-size {{block}}
 
 # Start Bridge for the M36 normal image and require its release build identity.
+release-bridge tck="6000000" block="1024":
+    {{python}} tools/jtag/yifpga_jtag_bridge.py --backend ftdi --tck-hz {{tck}} --block-size {{block}} --build-id 0x4d360001
+
+# Compatibility alias for the historical milestone name.
 m36-ftdi-bridge tck="6000000" block="1024":
     {{python}} tools/jtag/yifpga_jtag_bridge.py --backend ftdi --tck-hz {{tck}} --block-size {{block}} --build-id 0x4d360001
 
 # Start Bridge for the M36 performance image (M35-compatible performance build ID).
+release-perf-bridge tck="6000000" block="1024":
+    {{python}} tools/jtag/yifpga_jtag_bridge.py --backend ftdi --tck-hz {{tck}} --block-size {{block}} --build-id 0x4d350001
+
+# Compatibility alias for the historical milestone name.
 m36-perf-ftdi-bridge tck="6000000" block="1024":
     {{python}} tools/jtag/yifpga_jtag_bridge.py --backend ftdi --tck-hz {{tck}} --block-size {{block}} --build-id 0x4d350001
 
@@ -148,14 +156,26 @@ m36-check: m35-check
     {{python}} tools/jtag/validate_m36_release.py --self-test
 
 # Requires confirmation before running (five Vivado synthesis configurations).
+release-matrix:
+    {{vivado}} -mode batch -source prj/scripts/check_yifpga_jtag_m36_matrix.tcl
+
+# Compatibility alias for the historical milestone name.
 m36-matrix:
     {{vivado}} -mode batch -source prj/scripts/check_yifpga_jtag_m36_matrix.tcl
 
 # Long implementation/bitstream build; requires separate confirmation.
+release-bitstream:
+    {{vivado}} -mode batch -source prj/scripts/build_yifpga_jtag_m36_ila_bitstream.tcl
+
+# Compatibility alias for the historical milestone name.
 m36-ila-bitstream:
     {{vivado}} -mode batch -source prj/scripts/build_yifpga_jtag_m36_ila_bitstream.tcl
 
 # Long M36 performance+ILA implementation build; explicitly authorized hardware image.
+release-perf-bitstream:
+    {{vivado}} -mode batch -source prj/scripts/build_yifpga_jtag_m36_ila_bitstream.tcl -tclargs perf
+
+# Compatibility alias for the historical milestone name.
 m36-perf-ila-bitstream:
     {{vivado}} -mode batch -source prj/scripts/build_yifpga_jtag_m36_ila_bitstream.tcl -tclargs perf
 
@@ -164,12 +184,36 @@ m36-jtag-only-ila-bitstream:
     {{vivado}} -mode batch -source prj/scripts/build_yifpga_jtag_m36_ila_bitstream.tcl -tclargs jtag_only
 
 # Hardware operation; exact cable target filter and separate confirmation required.
+release-program target:
+    {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs {{target}}
+
+# Compatibility alias for the historical milestone name.
 m36-program target:
     {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs {{target}}
 
+# Hardware operation; program without a selector only when exactly one JTAG target exists.
+release-program-auto:
+    {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs auto
+
+# Compatibility alias for the historical milestone name.
+m36-program-auto:
+    {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs auto
+
 # Hardware operation: program the M36 performance+ILA image on one exact target.
+release-perf-program target:
+    {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs {{target}} perf
+
+# Compatibility alias for the historical milestone name.
 m36-perf-program target:
     {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs {{target}} perf
+
+# Hardware operation; program the performance image only when one JTAG target exists.
+release-perf-program-auto:
+    {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs auto perf
+
+# Compatibility alias for the historical milestone name.
+m36-perf-program-auto:
+    {{vivado}} -mode batch -source prj/scripts/program_yifpga_jtag_m36_ila.tcl -tclargs auto perf
 
 # Hardware operation: program the strict functional JTAG-only+ILA image.
 m36-jtag-only-program target:
@@ -180,6 +224,22 @@ m36-ila-capture target output="m36_ila_capture.csv":
     {{vivado}} -mode batch -source prj/scripts/capture_yifpga_jtag_m36_ila.tcl -tclargs {{target}} {{output}}
 
 # Validate a running real-board Bridge; defaults to the 30-minute release gate.
+release-soak seconds="1800" reconnects="3" output="prj/YiFPGAStudio.runs/m36/m36_soak.csv":
+    {{python}} tools/jtag/validate_m36_release.py --seconds {{seconds}} --client-reconnects {{reconnects}} --csv {{output}}
+
+# Validate normal-image JTAG function and reconnects without the perf-image rate gate.
+release-jtag-smoke seconds="60" reconnects="1" output="prj/YiFPGAStudio.runs/release/jtag_smoke.csv":
+    {{python}} tools/jtag/validate_m36_release.py --seconds {{seconds}} --client-reconnects {{reconnects}} --min-rate 0 --csv {{output}}
+
+# Validate the normal image's UART 115200 8N1 stream and retain raw evidence.
+release-uart-validate port="/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0" duration="30" minimum="50" capture="prj/YiFPGAStudio.runs/release/uart_capture.bin":
+    {{python}} tools/viewer/validate_uart_board.py --port {{port}} --baud 115200 --duration {{duration}} --minimum-frames {{minimum}} --capture {{capture}}
+
+# Reversible Monitor writes plus read-only and invalid-address protection checks.
+release-monitor-safe port="/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0":
+    {{python}} tools/viewer/validate_uart_board.py --port {{port}} --baud 115200 --monitor-safe-suite
+
+# Compatibility alias for the historical milestone name.
 m36-soak seconds="1800" reconnects="3" output="prj/YiFPGAStudio.runs/m36/m36_soak.csv":
     {{python}} tools/jtag/validate_m36_release.py --seconds {{seconds}} --client-reconnects {{reconnects}} --csv {{output}}
 
