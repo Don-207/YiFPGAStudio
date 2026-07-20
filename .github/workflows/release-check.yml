@@ -35,4 +35,6 @@ jobs:
         uses: extractions/setup-just@v3
 
       - name: Run hardware-free release gate
+        env:
+          YIFPGA_VIEWER_BROWSER: google-chrome
         run: just release-check
