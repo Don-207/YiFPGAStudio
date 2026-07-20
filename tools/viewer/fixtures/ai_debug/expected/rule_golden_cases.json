@@ -1,0 +1,18 @@
+{
+  "schema": "yifpga.rule_golden_expected",
+  "schema_version": 1,
+  "cases": {
+    "normal_all_sources":{"rules":[],"forbidden":["data_quality.incomplete.v1"],"threshold_sources":{}},
+    "transport_errors":{"rules":["transport.error_rate.v1"],"forbidden":[],"evidence":{"transport.error_rate.v1":["transport"]},"threshold_sources":{"transport.error_rate.v1":"default"}},
+    "monitor_timeout":{"rules":["monitor.response_timeout.v1"],"forbidden":[],"evidence":{"monitor.response_timeout.v1":["monitor"]},"threshold_sources":{"monitor.response_timeout.v1":"default"}},
+    "fifo_backpressure":{"rules":["fifo.backpressure.v1"],"forbidden":[],"evidence":{"fifo.backpressure.v1":["fifo"]},"threshold_sources":{"fifo.backpressure.v1":"default"}},
+    "throughput_drop":{"rules":["throughput.drop.v1"],"forbidden":[],"evidence":{"throughput.drop.v1":["throughput"]},"threshold_sources":{"throughput.drop.v1":"default"}},
+    "latency_spike":{"rules":["latency.spike.v1"],"forbidden":[],"evidence":{"latency.spike.v1":["latency"]},"threshold_sources":{"latency.spike.v1":"default"}},
+    "frame_stall":{"rules":["frame.stall.v1"],"forbidden":[],"evidence":{"frame.stall.v1":["frame"]},"threshold_sources":{"frame.stall.v1":"default"}},
+    "la_trigger_missing":{"rules":["la.trigger_missing.v1"],"forbidden":["la.data_integrity.v1"],"evidence":{"la.trigger_missing.v1":["la-armed"]},"threshold_sources":{"la.trigger_missing.v1":"default"}},
+    "la_partial_capture":{"rules":["data_quality.incomplete.v1","la.data_integrity.v1"],"forbidden":["la.trigger_missing.v1"],"threshold_sources":{"data_quality.incomplete.v1":"default","la.data_integrity.v1":"default"}},
+    "cross_source_overlap":{"rules":["fifo.backpressure.v1","cross_source.temporal_overlap.v1"],"forbidden":[],"threshold_sources":{"fifo.backpressure.v1":"default","cross_source.temporal_overlap.v1":"default"}},
+    "unknown_time_no_correlation":{"rules":["fifo.backpressure.v1"],"forbidden":["cross_source.temporal_overlap.v1"],"threshold_sources":{"fifo.backpressure.v1":"default"}},
+    "incomplete_suppresses_trigger":{"rules":["data_quality.incomplete.v1","la.data_integrity.v1","cross_source.temporal_overlap.v1"],"forbidden":["la.trigger_missing.v1"],"threshold_sources":{"data_quality.incomplete.v1":"default","la.data_integrity.v1":"default","cross_source.temporal_overlap.v1":"default"}}
+  }
+}

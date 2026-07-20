@@ -1,0 +1,93 @@
+{
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "snapshot_id": "snapshot_normal",
+  "created_at": "1970-01-01T00:00:00.000Z",
+  "time_range": {
+    "start_tick": 100,
+    "end_tick": 120,
+    "scope": {
+      "type": "session"
+    }
+  },
+  "timebase": {
+    "unit": "cycle",
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296
+  },
+  "target": {
+    "build_id": "fixture-normal"
+  },
+  "session_summary": {
+    "evidence_count": 2,
+    "source_counts": {
+      "debug": 1,
+      "trace": 1
+    },
+    "warning_count": 0
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_normal_log",
+      "kind": "debug_log",
+      "source": "debug",
+      "timestamp": {
+        "raw": 100,
+        "tick": 100,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "info",
+      "summary": "boot",
+      "data": {
+        "timestamp": 100,
+        "text": "boot"
+      },
+      "source_ref": {
+        "view": "debug",
+        "record_type": "log",
+        "locator": {
+          "timestamp": 100,
+          "id": "boot"
+        }
+      }
+    },
+    {
+      "evidence_id": "ev_normal_span",
+      "kind": "trace_span",
+      "source": "trace",
+      "timestamp": {
+        "raw": 120,
+        "tick": 120,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "info",
+      "summary": "trace span",
+      "data": {
+        "timestamp": 120,
+        "traceId": 1,
+        "instanceId": 7,
+        "status": 0
+      },
+      "source_ref": {
+        "view": "trace",
+        "record_type": "span",
+        "locator": {
+          "trace_id": 1,
+          "instance_id": 7
+        }
+      }
+    }
+  ],
+  "redaction": {
+    "profile": "none",
+    "audit": []
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": true,
+    "issues": [],
+    "sha256": "bf3ee525294e2f0694edfddae062d601c53a9c11bf7b12099c9b0fcbd1efb0a3"
+  }
+}

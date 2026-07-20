@@ -1,0 +1,15 @@
+{
+  "schema":"yifpga.provider_mock_expected",
+  "schema_version":1,
+  "cases":{
+    "valid":{"status":"completed"},
+    "streamed":{"status":"completed"},
+    "retry-once":{"status":"completed","retries":1},
+    "invalid-json":{"status":"failed","reason":"validation_failed"},
+    "missing-field":{"status":"failed","reason":"validation_failed"},
+    "bad-confidence":{"status":"failed","reason":"validation_failed"},
+    "unknown-evidence":{"status":"failed","reason":"validation_failed"},
+    "unsafe-action":{"status":"completed","action_safety":"requires_manual_confirmation"},
+    "secret-echo":{"status":"failed","reason":"validation_failed"}
+  }
+}

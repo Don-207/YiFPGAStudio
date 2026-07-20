@@ -1,0 +1,78 @@
+{
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "snapshot_id": "board_capture_0x42_transport_corrupt",
+  "created_at": "2026-07-17T00:00:00.000Z",
+  "time_range": {
+    "start_tick": 3219287938,
+    "end_tick": 3219287938,
+    "scope": {
+      "type": "offline_derived",
+      "scenario": "transport_error"
+    }
+  },
+  "timebase": {
+    "unit": "cycle",
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296
+  },
+  "target": {
+    "board": "sanitized-xilinx-board",
+    "part": "xcku5p",
+    "build_id": "0x4D360001",
+    "protocol_version": 1
+  },
+  "session_summary": {
+    "evidence_count": 1,
+    "source_counts": {
+      "viewer": 1
+    },
+    "warning_count": 1
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_board_transport_corrupt",
+      "kind": "viewer_transport",
+      "source": "viewer",
+      "timestamp": {
+        "raw": 3219287938,
+        "tick": 3219287938,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "warning",
+      "summary": "offline-derived transport corruption",
+      "data": {
+        "frames": 1567,
+        "checksumErrors": 2,
+        "malformedFrames": 1,
+        "syncDrops": 0,
+        "unknownFrames": 0
+      },
+      "source_ref": {
+        "view": "viewer",
+        "record_type": "counters",
+        "locator": {
+          "line": 556,
+          "derived": true
+        }
+      }
+    }
+  ],
+  "redaction": {
+    "profile": "local_export",
+    "audit": []
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": true,
+    "issues": [],
+    "sha256": "435b196d25dc623898428e94ff608b1b16218e105ebf1ce5861303282ff20a63"
+  },
+  "provenance": {
+    "source_path": "artifacts/manual/yifpga-debug-1784268897418.jsonl",
+    "source_sha256": "f161dd54cac33a7a237d5700305047ad3d9e9c25808228046d6ab3c4753ad4d8",
+    "baseline_snapshot": "board_capture_0x42_baseline.json",
+    "derivation": "set checksumErrors=2 and malformedFrames=1 in a copy"
+  }
+}

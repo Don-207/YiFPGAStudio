@@ -1,0 +1,105 @@
+{
+  "created_at": "2026-07-17T07:29:42.118502+00:00",
+  "evidence": [
+    {
+      "data": {
+        "flags": 23,
+        "metricId": 257,
+        "metricName": "FIFO_DEMO_LEVEL",
+        "overflowCount": 1,
+        "sampleCycles": 100000,
+        "value0": 120,
+        "value1": 120,
+        "value2": 16,
+        "value3": 983054
+      },
+      "evidence_id": "ev_board_fifo_metric",
+      "kind": "profiler_metric",
+      "severity": "warning",
+      "source": "profiler",
+      "source_ref": {
+        "locator": {
+          "payload_hex": "f7d2a5bf01011700a08601007800000078000000100000000e000f0001000000"
+        },
+        "record_type": "profiler_snapshot",
+        "view": "profiler"
+      },
+      "summary": "actual FIFO board metric",
+      "timestamp": {
+        "quality": "exact",
+        "raw": 3215315703,
+        "tick": 3215315703,
+        "wrap_count": 0
+      }
+    },
+    {
+      "data": {
+        "status": 0,
+        "traceId": 1
+      },
+      "evidence_id": "ev_board_fifo_trace",
+      "kind": "trace_span",
+      "severity": "info",
+      "source": "trace",
+      "source_ref": {
+        "locator": {
+          "payload_hex": "945a966b01006a030078000000"
+        },
+        "record_type": "trace_span_end",
+        "view": "trace"
+      },
+      "summary": "coexisting board trace span",
+      "timestamp": {
+        "quality": "exact",
+        "raw": 1805015700,
+        "tick": 1805015700,
+        "wrap_count": 0
+      }
+    }
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": true,
+    "issues": [],
+    "sha256": "9620fc0c851c9630691d46e5454afb84f1b8b07633ca26f0e50f7dce73097ce9"
+  },
+  "provenance": {
+    "baseline_snapshot": "board_fifo_baseline.json",
+    "derivation": "decode actual FIFO and Trace payloads",
+    "source_path": "artifacts/manual/ai-debug-profiler-run-20260717.json",
+    "source_sha256": "152580a4004b564574dd9f0ebe49973abc9056003aca5013aab605168e521fb5"
+  },
+  "redaction": {
+    "audit": [],
+    "profile": "local_export"
+  },
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "session_summary": {
+    "evidence_count": 2,
+    "source_counts": {
+      "profiler": 1,
+      "trace": 1
+    },
+    "warning_count": 1
+  },
+  "snapshot_id": "board_fifo_backpressure",
+  "target": {
+    "board": "sanitized-xilinx-board",
+    "build_id": "m36_ila:3461b2cef34e2102",
+    "part": "xcku5p",
+    "protocol_version": 1
+  },
+  "time_range": {
+    "end_tick": 3215315703,
+    "scope": {
+      "type": "board_scenario"
+    },
+    "start_tick": 1805015700
+  },
+  "timebase": {
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296,
+    "unit": "cycle"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-07-17T07:30:31.890093+00:00",
+  "evidence": [
+    {
+      "data": {
+        "armed": true,
+        "armedCycles": 500000000,
+        "complete": true,
+        "state": "armed",
+        "status": 17,
+        "triggerEventCount": 0,
+        "triggered": false
+      },
+      "evidence_id": "ev_board_la_armed",
+      "kind": "la_capture",
+      "severity": "warning",
+      "source": "logic_analyzer",
+      "source_ref": {
+        "locator": {
+          "scenario": "la-trigger-missing"
+        },
+        "record_type": "board_run_status",
+        "view": "logic_analyzer"
+      },
+      "summary": "board Logic Analyzer remained armed without a trigger",
+      "timestamp": {
+        "quality": "exact",
+        "raw": 0,
+        "tick": 0,
+        "wrap_count": 0
+      }
+    }
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": true,
+    "issues": [],
+    "sha256": "7f22b17e0a4d83c693d73130d87ca15de6421df5bedcb812988a8ed7624fb740"
+  },
+  "provenance": {
+    "baseline_snapshot": "board_la_trigger_baseline.json",
+    "derivation": "actual ARMED status and trigger-event count",
+    "source_path": "artifacts/manual/ai-debug-la-trigger-missing-run-20260717.json",
+    "source_sha256": "af1920f8a9e6ec37ee0d2c6dff97247538151d8819eef7cde3435d004ea03667"
+  },
+  "redaction": {
+    "audit": [],
+    "profile": "local_export"
+  },
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "session_summary": {
+    "evidence_count": 1,
+    "source_counts": {
+      "logic_analyzer": 1
+    },
+    "warning_count": 1
+  },
+  "snapshot_id": "board_la_trigger_missing",
+  "target": {
+    "board": "sanitized-xilinx-board",
+    "build_id": "m36_ila:3461b2cef34e2102",
+    "part": "xcku5p",
+    "protocol_version": 1
+  },
+  "time_range": {
+    "end_tick": 0,
+    "scope": {
+      "type": "board_scenario"
+    },
+    "start_tick": 0
+  },
+  "timebase": {
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296,
+    "unit": "cycle"
+  }
+}

@@ -1,0 +1,52 @@
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python and JavaScript caches
+__pycache__/
+*.py[cod]
+node_modules/
+
+# Vivado/Xilinx generated state
+.Xil/
+*.jou
+*.log
+*.pb
+*.str
+*.wdf
+*.wdb
+*.vcd
+*.webtalk
+usage_statistics_webtalk.*
+webtalk.*
+xsim.dir/
+sim_work/
+prj/*.cache/
+prj/*.hw/
+prj/*.runs/
+prj/*.sim/
+prj/*.ip_user_files/
+prj/.Xil/
+prj/*.jou
+prj/*.log
+prj/*.str
+prj/usage_statistics_webtalk.*
+
+# Generated FPGA artifacts and reports
+*.bit
+*.bin
+*.dcp
+*.ltx
+*.rpt
+*.rpx
+*.vdi
+*.vds
+*.csv
+
+# Local captures and temporary files
+clockInfo.txt
+*.tmp
+*.bak
+*.backup.*

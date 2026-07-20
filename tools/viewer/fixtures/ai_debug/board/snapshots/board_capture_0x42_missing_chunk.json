@@ -1,0 +1,95 @@
+{
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "snapshot_id": "board_capture_0x42_missing_chunk",
+  "created_at": "2026-07-17T00:00:00.000Z",
+  "time_range": {
+    "start_tick": 2547460876,
+    "end_tick": 2547460876,
+    "scope": {
+      "type": "offline_derived",
+      "scenario": "la_data_integrity",
+      "capture_id": 66
+    }
+  },
+  "timebase": {
+    "unit": "cycle",
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296
+  },
+  "target": {
+    "board": "sanitized-xilinx-board",
+    "part": "xcku5p",
+    "build_id": "0x4D360001",
+    "protocol_version": 1
+  },
+  "session_summary": {
+    "evidence_count": 1,
+    "source_counts": {
+      "logic_analyzer": 1
+    },
+    "warning_count": 1
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_board_la_missing_chunk",
+      "kind": "la_capture",
+      "source": "logic_analyzer",
+      "timestamp": {
+        "raw": 2547460876,
+        "tick": 2547460876,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "warning",
+      "summary": "offline-derived capture with chunk 6 removed",
+      "data": {
+        "captureId": 66,
+        "sampleCount": 64,
+        "chunks": 12,
+        "chunksTotal": 13,
+        "complete": false,
+        "missingRanges": [
+          [
+            30,
+            34
+          ]
+        ],
+        "errors": [
+          "missing_chunk_6"
+        ],
+        "malformed": 0
+      },
+      "source_ref": {
+        "view": "logic_analyzer",
+        "record_type": "capture",
+        "locator": {
+          "capture_id": 66,
+          "removed_chunk": 6,
+          "derived": true
+        }
+      }
+    }
+  ],
+  "redaction": {
+    "profile": "local_export",
+    "audit": []
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": false,
+    "issues": [
+      {
+        "code": "incomplete_la_capture",
+        "evidence_id": "ev_board_la_missing_chunk"
+      }
+    ],
+    "sha256": "b88eca5ff468b77059dbc31ad1d1125ae650dba2e7d00d2bced758fc9176de50"
+  },
+  "provenance": {
+    "source_path": "artifacts/manual/yifpga-debug-1784268897418.jsonl",
+    "source_sha256": "f161dd54cac33a7a237d5700305047ad3d9e9c25808228046d6ab3c4753ad4d8",
+    "baseline_snapshot": "board_capture_0x42_baseline.json",
+    "derivation": "remove LA chunk 6 (samples 30..34) from a copy"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "snapshot_id": "board_capture_0x42_baseline",
+  "created_at": "2026-07-17T00:00:00.000Z",
+  "time_range": {
+    "start_tick": 2547460876,
+    "end_tick": 3219287938,
+    "scope": {
+      "type": "board_capture",
+      "capture_id": 66
+    }
+  },
+  "timebase": {
+    "unit": "cycle",
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296
+  },
+  "target": {
+    "board": "sanitized-xilinx-board",
+    "part": "xcku5p",
+    "build_id": "0x4D360001",
+    "protocol_version": 1
+  },
+  "session_summary": {
+    "evidence_count": 2,
+    "source_counts": {
+      "viewer": 1,
+      "logic_analyzer": 1
+    },
+    "warning_count": 0
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_board_transport_baseline",
+      "kind": "viewer_transport",
+      "source": "viewer",
+      "timestamp": {
+        "raw": 3219287938,
+        "tick": 3219287938,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "info",
+      "summary": "board capture transport counters",
+      "data": {
+        "frames": 1567,
+        "checksumErrors": 0,
+        "syncDrops": 0,
+        "unknownFrames": 0
+      },
+      "source_ref": {
+        "view": "viewer",
+        "record_type": "counters",
+        "locator": {
+          "line": 556
+        }
+      }
+    },
+    {
+      "evidence_id": "ev_board_la_baseline",
+      "kind": "la_capture",
+      "source": "logic_analyzer",
+      "timestamp": {
+        "raw": 2547460876,
+        "tick": 2547460876,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "info",
+      "summary": "complete board Logic Analyzer capture",
+      "data": {
+        "captureId": 66,
+        "sampleCount": 64,
+        "chunks": 13,
+        "chunksTotal": 13,
+        "complete": true,
+        "missingRanges": [],
+        "malformed": 0
+      },
+      "source_ref": {
+        "view": "logic_analyzer",
+        "record_type": "capture",
+        "locator": {
+          "capture_id": 66
+        }
+      }
+    }
+  ],
+  "redaction": {
+    "profile": "local_export",
+    "audit": []
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": true,
+    "issues": [],
+    "sha256": "65de5fa9e95690c5167a36c27dfb09b4ce6cfed079b0f6e40c91cb264d25be3b"
+  },
+  "provenance": {
+    "source_path": "artifacts/manual/yifpga-debug-1784268897418.jsonl",
+    "source_sha256": "f161dd54cac33a7a237d5700305047ad3d9e9c25808228046d6ab3c4753ad4d8",
+    "derivation": "normalized_unmodified_capture"
+  }
+}

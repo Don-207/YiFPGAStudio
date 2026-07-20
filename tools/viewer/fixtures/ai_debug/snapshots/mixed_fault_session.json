@@ -1,0 +1,121 @@
+{
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "snapshot_id": "snapshot_mixed_fault",
+  "created_at": "1970-01-01T00:00:00.000Z",
+  "time_range": {
+    "start_tick": 200,
+    "end_tick": 240,
+    "scope": {
+      "type": "session"
+    }
+  },
+  "timebase": {
+    "unit": "cycle",
+    "frequency_hz": null,
+    "timestamp_modulus": 4294967296
+  },
+  "target": {},
+  "session_summary": {
+    "evidence_count": 3,
+    "source_counts": {
+      "monitor": 1,
+      "profiler": 1,
+      "viewer": 1
+    },
+    "warning_count": 3
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_monitor_timeout",
+      "kind": "monitor_timeout",
+      "source": "monitor",
+      "timestamp": {
+        "raw": null,
+        "tick": null,
+        "wrap_count": 0,
+        "quality": "unknown"
+      },
+      "severity": "error",
+      "summary": "monitor timeout",
+      "data": {
+        "seq": 9,
+        "addr": 64,
+        "status": 6
+      },
+      "source_ref": {
+        "view": "monitor",
+        "record_type": "monitor_timeout",
+        "locator": {
+          "seq": 9,
+          "addr": 64
+        }
+      }
+    },
+    {
+      "evidence_id": "ev_profiler_alert",
+      "kind": "profiler_alert",
+      "source": "profiler",
+      "timestamp": {
+        "raw": 200,
+        "tick": 200,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "warning",
+      "summary": "threshold",
+      "data": {
+        "timestamp": 200,
+        "metricId": 2,
+        "level": 2,
+        "code": 1
+      },
+      "source_ref": {
+        "view": "profiler",
+        "record_type": "alert",
+        "locator": {
+          "metric_id": 2,
+          "timestamp": 200
+        }
+      }
+    },
+    {
+      "evidence_id": "ev_transport_gap",
+      "kind": "viewer_transport",
+      "source": "viewer",
+      "timestamp": {
+        "raw": 240,
+        "tick": 240,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "warning",
+      "summary": "transport drops",
+      "data": {
+        "timestamp": 240,
+        "viewerDroppedBytes": 32
+      },
+      "source_ref": {
+        "view": "viewer",
+        "record_type": "transport",
+        "locator": {
+          "session_id": "fault"
+        }
+      }
+    }
+  ],
+  "redaction": {
+    "profile": "none",
+    "audit": []
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": false,
+    "issues": [
+      {
+        "code": "transport_drop"
+      }
+    ],
+    "sha256": "4bd42581da424e8a217f034c0a60d1fb2f4ce101310e3d9d60951b2f1ca2f49d"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "snapshot_id": "snapshot_incomplete_la",
+  "created_at": "1970-01-01T00:00:00.000Z",
+  "time_range": {
+    "start_tick": 300,
+    "end_tick": 300,
+    "scope": {
+      "type": "la_capture",
+      "capture_id": 42
+    }
+  },
+  "timebase": {
+    "unit": "cycle",
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296
+  },
+  "target": {},
+  "session_summary": {
+    "evidence_count": 1,
+    "source_counts": {
+      "logic_analyzer": 1
+    },
+    "warning_count": 1
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev_la_incomplete",
+      "kind": "la_capture",
+      "source": "logic_analyzer",
+      "timestamp": {
+        "raw": 300,
+        "tick": 300,
+        "wrap_count": 0,
+        "quality": "exact"
+      },
+      "severity": "warning",
+      "summary": "incomplete capture",
+      "data": {
+        "captureId": 42,
+        "timestamp": 300,
+        "sampleCount": 16,
+        "complete": false,
+        "missingRanges": [
+          [
+            1,
+            1
+          ]
+        ],
+        "errors": [
+          "missing_chunk"
+        ]
+      },
+      "source_ref": {
+        "view": "logic_analyzer",
+        "record_type": "capture",
+        "locator": {
+          "capture_id": 42
+        }
+      }
+    }
+  ],
+  "redaction": {
+    "profile": "none",
+    "audit": []
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": false,
+    "issues": [
+      {
+        "code": "incomplete_la_capture",
+        "evidence_id": "ev_la_incomplete"
+      }
+    ],
+    "sha256": "4abdf3d1465d0c79ba1d7d6c019f84847d6fdf5eb67ef377aac32abde22d8ff5"
+  }
+}

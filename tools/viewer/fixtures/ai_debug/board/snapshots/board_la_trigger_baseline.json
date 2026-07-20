@@ -1,0 +1,93 @@
+{
+  "created_at": "2026-07-17T07:30:31.890093+00:00",
+  "evidence": [
+    {
+      "data": {
+        "baseline": {
+          "0x0068": 0,
+          "0x0070": 1,
+          "0x0074": 32,
+          "0x0078": 8,
+          "0x007c": 4,
+          "0x0080": 7,
+          "0x0084": 128,
+          "0x0088": 128,
+          "0x0094": 4294967295
+        },
+        "recovery": {
+          "0x0068": 0,
+          "0x0070": 1,
+          "0x0074": 32,
+          "0x0078": 8,
+          "0x007c": 4,
+          "0x0080": 7,
+          "0x0084": 128,
+          "0x0088": 128,
+          "0x0094": 4294967295
+        },
+        "restored": true
+      },
+      "evidence_id": "ev_la_trigger_recovery",
+      "kind": "monitor_register",
+      "severity": "info",
+      "source": "monitor",
+      "source_ref": {
+        "locator": {
+          "scenario": "la-trigger-missing"
+        },
+        "record_type": "board_run_recovery",
+        "view": "monitor"
+      },
+      "summary": "scenario configuration restored to baseline",
+      "timestamp": {
+        "quality": "exact",
+        "raw": 0,
+        "tick": 0,
+        "wrap_count": 0
+      }
+    }
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "complete": true,
+    "issues": [],
+    "sha256": "3456f17b464ca474c6c329cfc612df41a6ef309924f10ea391c87b316d508161"
+  },
+  "provenance": {
+    "derivation": "baseline and recovery register equality",
+    "source_path": "artifacts/manual/ai-debug-la-trigger-missing-run-20260717.json",
+    "source_sha256": "af1920f8a9e6ec37ee0d2c6dff97247538151d8819eef7cde3435d004ea03667"
+  },
+  "redaction": {
+    "audit": [],
+    "profile": "local_export"
+  },
+  "schema": "yifpga.diagnostic_snapshot",
+  "schema_version": 1,
+  "session_summary": {
+    "evidence_count": 1,
+    "source_counts": {
+      "monitor": 1
+    },
+    "warning_count": 0
+  },
+  "snapshot_id": "board_la_trigger_baseline",
+  "target": {
+    "board": "sanitized-xilinx-board",
+    "build_id": "m36_ila:3461b2cef34e2102",
+    "part": "xcku5p",
+    "protocol_version": 1
+  },
+  "time_range": {
+    "end_tick": 0,
+    "scope": {
+      "type": "board_scenario"
+    },
+    "start_tick": 0
+  },
+  "timebase": {
+    "frequency_hz": 100000000,
+    "timestamp_modulus": 4294967296,
+    "unit": "cycle"
+  }
+}

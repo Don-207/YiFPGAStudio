@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YiFPGA Studio Web Viewer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>YiFPGA Studio Web Viewer</h1>
+      <p>Debug Protocol v1 over UART or JTAG Bridge</p>
+    </div>
+    <div class="status-bar">
+      <span id="serialSupport" class="pill">Checking serial</span>
+      <span id="connectionState" class="pill muted">Disconnected</span>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="toolbar" aria-label="Data source controls">
+      <label>
+        Source
+        <select id="sourceType">
+          <option value="serial">Serial</option>
+          <option value="jtag">JTAG Bridge</option>
+        </select>
+      </label>
+      <label>
+        Baud
+        <select id="baudRate" data-serial-control>
+          <option value="115200">115200</option>
+          <option value="921600">921600</option>
+          <option value="3000000">3000000</option>
+        </select>
+      </label>
+      <label data-jtag-control hidden>Host<input id="bridgeHost" value="127.0.0.1"></label>
+      <label data-jtag-control hidden>Port<input id="bridgePort" type="number" min="1" max="65535" value="48535"></label>
+      <label>Raw replay<input id="rawReplayInput" type="file" accept=".bin,application/octet-stream"></label>
+      <button id="connectButton" type="button">Connect</button>
+      <button id="disconnectButton" type="button" disabled>Disconnect</button>
+      <button id="sampleButton" type="button">Inject Sample</button>
+      <button id="pauseButton" type="button" aria-pressed="false">Pause</button>
+      <button id="clearButton" type="button">Clear</button>
+      <button id="exportCsvButton" type="button">Export CSV</button>
+      <button id="exportJsonlButton" type="button">Export JSONL</button>
+    </section>
+
+    <section class="panel transport-panel" aria-label="Transport health">
+      <div class="panel-title"><h2>Transport</h2><span id="transportSummary">Serial disconnected</span></div>
+      <dl class="transport-grid">
+        <dt>Bridge / Transport</dt><dd id="bridgeVersion">-</dd>
+        <dt>Target</dt><dd id="bridgeTarget">-</dd>
+        <dt>Session / Build</dt><dd id="bridgeSession">-</dd>
+        <dt>Throughput</dt><dd id="bridgeThroughput">-</dd>
+        <dt>Buffer / Overflow</dt><dd id="bridgeBuffer">-</dd>
+        <dt>Reconnect / Error</dt><dd id="bridgeReconnect">-</dd>
+      </dl>
+    </section>
+
+    <section class="metrics" aria-label="Protocol counters">
+      <div><span id="frameCount">0</span><small>Frames</small></div>
+      <div><span id="checksumErrors">0</span><small>Checksum Errors</small></div>
+      <div><span id="syncDrops">0</span><small>Sync Drops</small></div>
+      <div><span id="unknownFrames">0</span><small>Unknown</small></div>
+    </section>
+
+    <section id="aiDebugPanel" class="panel ai-debug-panel" aria-label="AI Debug">
+      <div class="panel-title ai-debug-title">
+        <div><h2>AI Debug</h2><span id="aiDebugStatus">idle</span></div>
+        <div class="ai-debug-controls">
+          <label>Scope<select id="aiDebugScope"><option value="session">Current session</option><option value="time_window">Visible time window</option><option value="la_capture">Latest LA capture</option></select></label>
+          <button id="aiDebugLocalButton" type="button">Run Local Analysis</button>
+          <label class="consent"><input id="aiDebugConsent" type="checkbox">I reviewed the redacted Provider preview</label>
+          <button id="aiDebugAskButton" type="button">Ask Mock AI</button>
+          <button id="aiDebugCancelButton" type="button" disabled>Cancel</button>
+        </div>
+      </div>
+      <div class="ai-debug-grid">
+        <section><h3>Scope &amp; Evidence Preview</h3><div id="aiDebugPreview" class="ai-preview">Run local analysis to build an immutable snapshot.</div></section>
+        <section><h3>Local Findings</h3><div id="aiDebugFindings"></div></section>
+        <section><h3>Validated AI Hypotheses</h3><div id="aiDebugHypotheses"></div><h3>Actions</h3><ul id="aiDebugActions"><li>No actions.</li></ul></section>
+        <section><h3>Feedback</h3><label>Rating<select id="aiDebugFeedbackRating"><option value="">Not set</option><option value="useful">Useful</option><option value="not_useful">Not useful</option></select></label><label>Actual root cause<input id="aiDebugFeedbackRoot"></label><label>Local note<textarea id="aiDebugFeedbackNote" rows="3"></textarea></label><h3>Session History</h3><ul id="aiDebugHistory"><li>No reports.</li></ul></section>
+      </div>
+      <div class="ai-debug-export"><button id="aiDebugExportSnapshot" type="button">Export Snapshot JSON</button><button id="aiDebugExportDiagnosis" type="button">Export Diagnosis JSON</button><button id="aiDebugExportMarkdown" type="button">Export Markdown</button></div>
+    </section>
+
+    <section class="panel la-panel" aria-label="Logic Analyzer">
+      <div class="panel-title la-title">
+        <div>
+          <h2>Logic Analyzer</h2>
+          <span id="laSummary">No capture</span>
+        </div>
+        <div class="la-controls">
+          <button id="laArmButton" type="button">Arm</button>
+          <button id="laStopButton" type="button">Stop</button>
+          <button id="laForceButton" type="button">Force</button>
+          <button id="laClearButton" type="button">Clear</button>
+          <button id="laReadoutButton" type="button">Readout</button>
+          <button id="laExportVcdButton" type="button">Export VCD</button>
+          <button type="button" data-diagnose-scope="la_capture">Diagnose</button>
+        </div>
+      </div>
+      <div class="la-config">
+        <label>Divisor<input id="laSampleDivisor" type="number" min="1" max="65535" step="1" value="4"></label>
+        <label>Depth<input id="laCaptureDepth" type="number" min="1" step="1" value="128"></label>
+        <label>Pre<input id="laPretriggerDepth" type="number" min="0" step="1" value="32"></label>
+        <label>Mode<select id="laTriggerMode"></select></label>
+        <label>Channel<input id="laTriggerChannel" type="number" min="0" max="31" step="1" value="3"></label>
+        <label>Value<input id="laTriggerValue" value="0x00000008"></label>
+        <label>Mask<input id="laTriggerMask" value="0x00000008"></label>
+        <button id="laApplyConfigButton" type="button">Apply</button>
+      </div>
+      <div class="la-stats" aria-label="Logic Analyzer status">
+        <div><span id="laCaptureId">-</span><small>Capture</small></div>
+        <div><span id="laState">-</span><small>State</small></div>
+        <div><span id="laSamples">0</span><small>Samples</small></div>
+        <div><span id="laChunks">0/0</span><small>Chunks</small></div>
+        <div><span id="laParserHealth">0</span><small>Malformed</small></div>
+      </div>
+      <div class="la-viewport">
+        <label>Start<input id="laViewportStart" type="number" min="0" step="1" value="0"></label>
+        <label>Samples/px<input id="laSamplesPerPixel" type="number" min="1" step="1" value="1"></label>
+        <button id="laZoomInButton" type="button">Zoom In</button>
+        <button id="laZoomOutButton" type="button">Zoom Out</button>
+        <label>Cursor A<input id="laCursorA" type="number" min="0" step="1" value="0"></label>
+        <label>Cursor B<input id="laCursorB" type="number" min="0" step="1" value="0"></label>
+        <span id="laCursorDelta" class="la-delta">Delta -</span>
+      </div>
+      <div class="la-layout">
+        <aside id="laChannelList" class="la-channel-list" aria-label="Logic Analyzer channels"></aside>
+        <div class="la-wave-wrap">
+          <canvas id="laWaveCanvas" width="960" height="360"></canvas>
+          <div id="laErrors" class="la-errors"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel trace-panel" aria-label="Trace timeline">
+      <div class="panel-title trace-title">
+        <div>
+          <h2>Trace</h2>
+          <span id="traceSummary">0 spans, 0 marks, 0 values</span>
+        </div>
+        <div class="trace-filters" aria-label="Trace filters">
+          <button type="button" data-diagnose-scope="time_window">Diagnose</button>
+          <label>
+            Lane
+            <select id="traceLaneFilter">
+              <option value="all">All</option>
+            </select>
+          </label>
+          <label>
+            Status
+            <select id="traceStatusFilter">
+              <option value="all">All</option>
+              <option value="problem">Warn/Error/Timeout</option>
+              <option value="0">OK</option>
+              <option value="1">WARN</option>
+              <option value="2">ERROR</option>
+              <option value="3">TIMEOUT</option>
+            </select>
+          </label>
+          <label>
+            From
+            <input id="traceFrom" type="number" min="0" step="1" placeholder="auto">
+          </label>
+          <label>
+            To
+            <input id="traceTo" type="number" min="0" step="1" placeholder="auto">
+          </label>
+        </div>
+      </div>
+      <div class="trace-stats" aria-label="Trace statistics">
+        <div><span id="traceSpanCount">0</span><small>Spans</small></div>
+        <div><span id="traceAverageDuration">-</span><small>Avg Duration</small></div>
+        <div><span id="traceMaxDuration">-</span><small>Max Duration</small></div>
+        <div><span id="traceProblemCount">0</span><small>Problems</small></div>
+      </div>
+      <div class="trace-layout">
+        <div id="traceTimeline" class="trace-timeline" role="list"></div>
+        <aside class="trace-detail" aria-label="Trace detail">
+          <h3>Selection</h3>
+          <dl id="traceDetail" class="status-list">
+            <dt>Item</dt>
+            <dd>-</dd>
+          </dl>
+          <h3>Latest Values</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Trace</th>
+                <th>Value</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="traceValueBody"></tbody>
+          </table>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel monitor-panel" aria-label="Monitor registers">
+      <div class="panel-title monitor-title">
+        <div>
+          <h2>Monitor</h2>
+          <span id="monitorSummary">0 registers, 0 pending</span>
+        </div>
+        <div class="monitor-controls">
+          <label>
+            Poll
+            <input id="monitorPollEnabled" type="checkbox">
+          </label>
+          <label>
+            Interval
+            <input id="monitorPollInterval" type="number" min="100" step="100" value="500">
+          </label>
+          <button id="monitorReadAllButton" type="button">Read All</button>
+          <button type="button" data-diagnose-scope="session">Diagnose</button>
+        </div>
+      </div>
+      <div class="monitor-layout">
+        <table>
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Name</th>
+              <th>Access</th>
+              <th>Value</th>
+              <th>Updated</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="monitorBody"></tbody>
+        </table>
+        <aside class="monitor-errors" aria-label="Monitor errors">
+          <h3>Errors</h3>
+          <div id="monitorErrors" class="error-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel profiler-panel" aria-label="Profiler metrics">
+      <div class="panel-title profiler-title">
+        <div>
+          <h2>Profiler</h2>
+          <span id="profilerSummary">0 snapshots, 0 alerts, 0 malformed</span>
+        </div>
+        <div class="profiler-controls">
+          <label>
+            Metric
+            <select id="profilerMetricSelect"></select>
+          </label>
+          <label>
+            Value
+            <select id="profilerValueSelect">
+              <option value="0">value0</option>
+              <option value="1">value1</option>
+              <option value="2">value2</option>
+              <option value="3">value3</option>
+            </select>
+          </label>
+          <label>
+            Alerts
+            <select id="profilerAlertFilter">
+              <option value="all">All</option>
+              <option value="2">Warning</option>
+              <option value="3">Error</option>
+            </select>
+          </label>
+          <label>
+            Period
+            <input id="profilerPeriodInput" type="number" min="1" step="1" value="100000">
+          </label>
+          <button id="profilerEnableButton" type="button">Enable</button>
+          <button id="profilerDisableButton" type="button">Disable</button>
+          <button id="profilerApplyPeriodButton" type="button">Apply Period</button>
+          <button id="profilerClearButton" type="button">Clear</button>
+          <button id="profilerReadStatusButton" type="button">Read Status</button>
+          <button type="button" data-diagnose-scope="time_window">Diagnose</button>
+        </div>
+      </div>
+      <div id="profilerCards" class="profiler-cards" aria-label="Profiler metric cards"></div>
+      <div class="profiler-layout">
+        <div class="profiler-trend">
+          <canvas id="profilerTrendCanvas" width="960" height="260"></canvas>
+        </div>
+        <aside class="profiler-alerts" aria-label="Profiler alerts">
+          <h3>Alerts</h3>
+          <div id="profilerAlerts" class="error-list"></div>
+        </aside>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Type</th>
+            <th>Latest</th>
+            <th>Window</th>
+            <th>Min/Max/Avg</th>
+            <th>Flags</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody id="profilerTableBody"></tbody>
+      </table>
+    </section>
+
+    <section class="grid">
+      <div class="panel log-panel">
+        <div class="panel-title">
+          <h2>Log</h2>
+          <span id="logCount">0</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Type</th>
+              <th>ID</th>
+              <th>Value</th>
+              <th>Text</th>
+            </tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <h2>Watch</h2>
+          <span id="watchCount">0</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Value</th>
+              <th>Timestamp</th>
+              <th>Updates</th>
+            </tr>
+          </thead>
+          <tbody id="watchBody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <h2>Events</h2>
+          <span id="eventCount">0</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Level</th>
+              <th>Arg0</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody id="eventBody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <h2>Status</h2>
+        </div>
+        <dl class="status-list">
+          <dt>Buffer Used</dt>
+          <dd id="bufferUsed">-</dd>
+          <dt>Drop Count</dt>
+          <dd id="dropCount">-</dd>
+          <dt>Packet Count</dt>
+          <dd id="packetCount">-</dd>
+          <dt>Last Timestamp</dt>
+          <dd id="lastTimestamp">-</dd>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <script src="diagnostic_snapshot.js"></script>
+  <script src="diagnostic_rules.js"></script>
+  <script src="diagnosis_validator.js"></script>
+  <script src="ai_provider.js"></script>
+  <script src="ai_debug_model.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

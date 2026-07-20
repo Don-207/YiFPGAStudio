@@ -1,0 +1,18 @@
+{
+  "format": "YiFPGA M32 mailbox fixture v1",
+  "byte_order": "little-endian",
+  "debug_protocol_frames": [
+    {
+      "name": "heartbeat",
+      "hex": "a5 01 01 04 78 56 34 12 1d"
+    },
+    {
+      "name": "monitor_read_request",
+      "hex": "a5 01 20 05 01 00 0c 00 04 2d"
+    },
+    {
+      "name": "trace_span_begin",
+      "hex": "a5 01 10 0c 64 00 00 00 01 00 42 00 10 00 00 00 2a"
+    }
+  ]
+}
