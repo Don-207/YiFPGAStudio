@@ -1,4 +1,4 @@
-# Build the KU5P PCIe Gen3 x8 Vivado project.
+# Build the YiFPGA Studio Vivado project.
 #
 # Usage:
 #   vivado -mode batch -source prj/build.tcl
@@ -6,8 +6,8 @@
 
 set script_dir [file dirname [file normalize [info script]]]
 set repo_dir   [file normalize [file join $script_dir ..]]
-set proj_name  ku5p_pcie_gen3x8
-set xpr_file   [file join $repo_dir build $proj_name ${proj_name}.xpr]
+set proj_name  YiFPGAStudio
+set xpr_file   [file join $script_dir YiFPGAStudio.generated ${proj_name}.xpr]
 set synth_only [expr {[lsearch -exact $argv synth_only] >= 0}]
 
 if {![file exists $xpr_file]} {

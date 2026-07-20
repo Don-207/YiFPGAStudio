@@ -8,7 +8,7 @@
 
 - [ ] 工作树干净，发布提交已完成代码审查。
 - [ ] README、Changelog、贡献指南和安全策略与候选版本一致。
-- [ ] Vivado 工程不依赖开发者机器的绝对路径。
+- [ ] 使用 `prj/create_project.tcl` 在全新目录成功重建工程，确认不依赖开发者机器的绝对路径。
 - [ ] 仓库不包含 `.bit`、`.dcp`、`.ltx`、运行目录、凭据或未脱敏采集数据。
 - [ ] GitHub Actions `Release Check` 在发布提交上通过。
 

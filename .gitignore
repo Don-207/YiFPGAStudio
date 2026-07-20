@@ -29,6 +29,7 @@ prj/*.runs/
 prj/*.sim/
 prj/*.ip_user_files/
 prj/.Xil/
+prj/YiFPGAStudio.generated/
 prj/*.jou
 prj/*.log
 prj/*.str
