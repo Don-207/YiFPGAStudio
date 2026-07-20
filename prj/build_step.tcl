@@ -15,8 +15,8 @@
 
 set script_dir [file dirname [file normalize [info script]]]
 set repo_dir   [file normalize [file join $script_dir ..]]
-set proj_name  ku5p_pcie_gen3x8
-set xpr_file   [file join $repo_dir build $proj_name ${proj_name}.xpr]
+set proj_name  YiFPGAStudio
+set xpr_file   [file join $script_dir YiFPGAStudio.generated ${proj_name}.xpr]
 
 if {[llength $argv] < 1} {
     error "Missing stage. Use one of: synth, opt, place, route, bit."

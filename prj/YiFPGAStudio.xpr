@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="54" Path="D:/code/fpga/xc7a35t/YiFPGAStudio/prj/YiFPGAStudio.xpr">
+<Project Version="7" Minor="54" Path="YiFPGAStudio.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="9dea1f7a331542a79fd47bd1cc214330"/>

@@ -40,13 +40,28 @@ doc/                       Protocol, milestone, usage, and validation docs
 prj/                       Vivado project, constraints, scripts, generated runs
 ```
 
+## 开发环境
+
+当前发布候选的已验证工具基线：
+
+- Python 3.10
+- Node.js 20
+- just 1.56
+- Vivado 2024.2（仅 FPGA elaboration、综合、实现、bitstream 和烧录需要）
+
+Python/Node/just 用于无硬件回归。Vivado 操作不会由 CI 自动执行，具体发布门禁见
+[`doc/V1_RELEASE_CHECKLIST.md`](doc/V1_RELEASE_CHECKLIST.md)。
+
 ## 快速开始
 
-1. 打开 Vivado 工程：
+1. 从仓库源码生成可移植的 Vivado 工程（只创建工程，不执行综合）：
 
 ```powershell
-vivado prj\YiFPGAStudio.xpr
+vivado -mode batch -source prj\create_project.tcl
 ```
+
+生成的工程位于 `prj/YiFPGAStudio.generated/YiFPGAStudio.xpr`，属于本地生成物，不提交
+到 Git。
 
 2. 确认顶层为 `yifpga_debug_board_demo`，器件为 `xcku5p-ffvb676-2-i`。
 
@@ -191,3 +206,4 @@ python3 tools/viewer/ai_debug_validate.py release
 - [JTAG Transport 使用说明](doc/YiFPGA_JTAG_Transport_使用说明.md)
 - [JTAG Bridge 使用说明](doc/YiFPGA_JTAG_Bridge_使用说明.md)
 - [AI Debug 使用说明](doc/YiFPGA_AI_Debug_使用说明.md)
+- [v1.0.0 发布 Checklist](doc/V1_RELEASE_CHECKLIST.md)
